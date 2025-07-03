@@ -4,58 +4,131 @@
 <head>
   <meta charset="UTF-8">
   <title>Приглашение на знакомство родителей</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marcellus&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Georgia', serif;
-      background: linear-gradient(to right, #f0ece7, #e0dacf);
-      color: #4a4a4a;
+      font-family: 'Marcellus', serif;
+      background: linear-gradient(to right, #f9f5f0, #eae5dd);
+      color: #3e3e3e;
+      text-align: center;
+      padding: 40px 20px;
     }
+
     .container {
       max-width: 800px;
-      margin: 40px auto;
+      margin: auto;
       padding: 40px;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     }
+
     h1 {
       font-family: 'Great Vibes', cursive;
       font-size: 42px;
-      text-align: center;
       color: #3e3e3e;
+      margin-bottom: 20px;
     }
+
     .info {
       font-size: 18px;
       line-height: 1.6;
-      margin: 20px 0;
-      text-align: center;
+      margin-bottom: 30px;
     }
+
     .footer {
       font-style: italic;
-      text-align: center;
       margin-top: 40px;
       color: #6a6a6a;
     }
+
     img {
       width: 100%;
       border-radius: 12px;
       margin-top: 25px;
     }
+
     .highlight {
       font-weight: bold;
       color: #222;
     }
+
+    /* Таймер в виде плиток */
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 20px auto;
+      max-width: 800px;
+    }
+
+    .countdown-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .digit-box {
+      display: flex;
+      gap: 5px;
+    }
+
+    .digit {
+      background: #ffffff;
+      border: 1px solid #d8d3cc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      width: 40px;
+      height: 55px;
+      font-size: 32px;
+      line-height: 55px;
+      text-align: center;
+      border-radius: 6px;
+    }
+
+    .label {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #5c5c5c;
+    }
+
+    .timer-heading {
+      font-size: 24px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
+
   <div class="container">
     <h1>Дорогие родители!</h1>
     <p class="info">
       Мы, Дарья и Сергей, с трепетом и радостью приглашаем вас на особенный вечер — знакомство наших семей.<br>
       Пусть это станет началом добрых и тёплых отношений.
     </p>
+
+    <div class="timer-heading">До нашей встречи осталось</div>
+    <div class="countdown-container">
+      <div class="countdown-block">
+        <div class="digit-box" id="days-box"></div>
+        <div class="label">дней</div>
+      </div>
+      <div class="countdown-block">
+        <div class="digit-box" id="hours-box"></div>
+        <div class="label">часов</div>
+      </div>
+      <div class="countdown-block">
+        <div class="digit-box" id="minutes-box"></div>
+        <div class="label">минут</div>
+      </div>
+      <div class="countdown-block">
+        <div class="digit-box" id="seconds-box"></div>
+        <div class="label">секунд</div>
+      </div>
+    </div>
 
     <img src="processed_couple_photo.jpg" alt="Дарья и Сергей — фото пары">
 
@@ -72,5 +145,46 @@
       Дарья и Сергей
     </p>
   </div>
+
+  <script>
+    function padDigits(num) {
+      return num.toString().padStart(2, '0').split('');
+    }
+
+    function renderDigits(id, value) {
+      const container = document.getElementById(id);
+      container.innerHTML = '';
+      padDigits(value).forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'digit';
+        div.textContent = d;
+        container.appendChild(div);
+      });
+    }
+
+    function updateCountdown() {
+      const targetDate = new Date("2025-07-04T19:00:00+03:00");
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.body.innerHTML = "<h2>Время встречи уже наступило!</h2>";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      renderDigits("days-box", days);
+      renderDigits("hours-box", hours);
+      renderDigits("minutes-box", minutes);
+      renderDigits("seconds-box", seconds);
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
 </body>
 </html>
